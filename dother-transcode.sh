@@ -15,5 +15,5 @@ else
     filename=$(basename "$absolute_input")
 
     # docker command
-    exec docker run --rm -v "$directory":/src -w "$(pwd)" ghcr.io/ttys0/other-transcode:sw-latest "${@:1:$num_args}" "/src/$filename"
+    exec docker run --rm -v "$directory":/src -v "$(pwd)":/out -w /out ghcr.io/ttys0/other-transcode:sw-latest "${@:1:$num_args}" "/src/$filename"
 fi
