@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "--help" ] || [ $# -eq 0 ]; then
+if [ "$1" = "--help" ] || [ "$1" = "--version" ] || [ $# -eq 0 ]; then
     exec docker run --rm -v "$(pwd)":"$(pwd)" -w "$(pwd)" ghcr.io/ttys0/other-transcode:sw-latest "$@"
 else
     # Number of arguments minus 1
