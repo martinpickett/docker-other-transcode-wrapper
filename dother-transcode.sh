@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+# Docker image name
+image="ghcr.io/ttys0/other-transcode:sw-latest"
+
+# Check to see if docker exists
+if ! command -v docker &> /dev/null; then
+    echo "Docker cannot be found on this system"
+    exit
+fi
+
+# Check if docker image $image exists
+if ! docker image inspect "$image" &> /dev/null; then
+    echo "Docker image $image cannot be found on this system"
+    exit
+fi
+
 # Initiate 'noEncode' flag and empty arrays for files and non-file parametes
 noEncode=false
 files=()
@@ -27,7 +42,7 @@ fi
 
 # If 'noEncode' flag has been set, run simplified docker command
 if [ "$noEncode" = true ]; then
-    exec docker run --rm -v "$(pwd)":"$(pwd)" -w "$(pwd)" ghcr.io/ttys0/other-transcode:sw-latest "$@"
+    exec docker run --rm -v "$(pwd)":"$(pwd)" -w "$(pwd)" "$image" "$@"
 else
     # Loop throught each file in files
     for file in "${files[@]}"; do
@@ -36,7 +51,7 @@ else
         directory=$(dirname "$absolute_input")
         filename=$(basename "$absolute_input")
 
-        # docker command
-        docker run --rm -v "$directory":/src -v "$(pwd)":/out -w /out ghcr.io/ttys0/other-transcode:sw-latest "${newparams[@]}" "/src/$filename"
+        # Run docker command
+        docker run --rm -v "$directory":/src -v "$(pwd)":/out -w /out "$image" "${newparams[@]}" "/src/$filename"
     done
 fi
