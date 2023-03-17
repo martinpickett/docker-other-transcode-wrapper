@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "--help" ] || [ "$1" = "--version" ] || [ $# -eq 0 ]; then
+# Loop through input parameters looking for "--help" and "--version"
+noEncode=false
+if [ $# -eq 0 ]; then
+    noEncode=true
+else
+    for param in "$@"; do
+	    if [ "$param" = "--help" ] || [ "$param" = "-h" ] || [ "$param" = "--version" ]; then
+		    noEncode=true
+        fi
+    done
+fi
+
+if [ "$noEncode" = true ]; then
     exec docker run --rm -v "$(pwd)":"$(pwd)" -w "$(pwd)" ghcr.io/ttys0/other-transcode:sw-latest "$@"
 else
     # Number of arguments minus 1
